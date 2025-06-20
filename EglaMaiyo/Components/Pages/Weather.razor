@@ -1,0 +1,62 @@
+﻿@page "/weather"
+@inject WeatherService WeatherService
+
+<h3 class="text-primary mb-4">Weather Information</h3>
+
+<div class="card shadow p-4 mb-4">
+    <div class="row g-3 align-items-center">
+        <div class="col-md-6">
+            <input @bind="city" class="form-control" placeholder="Enter city name..." />
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100" @onclick="GetWeather">Get Weather</button>
+
+        </div>
+    </div>
+
+    @if (weatherInfo != null)
+    {
+        <div class="mt-4">
+            <h5>Weather for <span class="text-info">@weatherInfo.City</span></h5>
+            <p class="mb-1">🌡️ <strong>@weatherInfo.TemperatureCelsius</strong> °C</p>
+            <p class="mb-0">🌥️ @weatherInfo.Description</p>
+        </div>
+    }
+    else if (showError)
+    {
+        <div class="alert alert-warning mt-4">Could not retrieve weather data. Please try again.</div>
+    }
+</div>
+
+@code {
+    private string city = "";
+    private WeatherInfo? weatherInfo;
+    private bool showError = false;
+
+    private async Task GetWeather()
+    {
+        Console.WriteLine($"Button clicked. City entered: {city}");
+
+        try
+        {
+            weatherInfo = await WeatherService.GetWeatherAsync(city);
+
+            if (weatherInfo == null)
+            {
+                Console.WriteLine("weatherInfo is null.");
+                showError = true;
+            }
+            else
+            {
+                Console.WriteLine("weatherInfo received successfully.");
+                showError = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
+            showError = true;
+            weatherInfo = null;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+﻿@page "/logs"
+@inject EglaMaiyo.Services.LogService LogService
+
+<h3 class="mb-4">API Logs</h3>
+
+@if (logs is null || !logs.Any())
+{
+    <div class="alert alert-info">
+        No logs available.
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var log in logs)
+        {
+            <div class="col">
+                <div class="card shadow-sm border-start border-4 border-primary h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@log.Source</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@log.Timestamp.ToString("g")</h6>
+                        <p class="card-text">
+                            <strong>Endpoint:</strong> @log.Endpoint<br />
+                            <strong>Status:</strong>
+                            <span class="badge @(log.Status == "Success" ? "bg-success" : "bg-danger")">@log.Status</span><br />
+                            <strong>Message:</strong> @log.Message<br />
+                            <strong>Response:</strong> <span class="text-break">@log.Response</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<EglaMaiyo.Models.ApiLog> logs;
+
+    protected override void OnInitialized()
+    {
+        logs = LogService.GetLogs();
+    }
+}
+
