@@ -13,7 +13,7 @@ namespace EglaMaiyo.Services
         private readonly ILogger<WeatherService> _logger;
         private readonly LogService _logService;
 
-        private const string ApiKey = "2d57f14922ea34864bd04aa88ebb1caa"; // Replace with your actual API key
+        private const string ApiKey = "2d57f14922ea34864bd04aa88ebb1caa"; 
 
         public WeatherService(HttpClient httpClient, ILogger<WeatherService> logger, LogService logService)
         {
@@ -27,14 +27,14 @@ namespace EglaMaiyo.Services
             try
             {
                 var url = $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={ApiKey}&units=metric";
-                Console.WriteLine($"[DEBUG] Fetching weather for: {city}");
-                Console.WriteLine($"[DEBUG] URL: {url}");
+                System.Console.WriteLine($"[DEBUG] Fetching weather for: {city}");
+                System.Console.WriteLine($"[DEBUG] URL: {url}");
 
                 var result = await _httpClient.GetFromJsonAsync<ApiWeatherResponse>(url);
 
                 if (result == null || result.main == null || result.weather == null || result.weather.Count == 0)
                 {
-                    Console.WriteLine("[DEBUG] Weather API returned no data.");
+                    System.Console.WriteLine("[DEBUG] Weather API returned no data.");
                     _logService.AddLog("Weather API", "Fail", $"No data returned for city: {city}");
                     return null;
                 }
@@ -51,14 +51,14 @@ namespace EglaMaiyo.Services
             }
             catch (HttpRequestException httpEx)
             {
-                Console.WriteLine($"[ERROR] HTTP Exception: {httpEx.Message}");
+                System.Console.WriteLine($"[ERROR] HTTP Exception: {httpEx.Message}");
                 _logger.LogError(httpEx, "HTTP error fetching weather for {City}", city);
                 _logService.AddLog("Weather API", "Error", $"HTTP exception for {city}: {httpEx.Message}");
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] General Exception: {ex.Message}");
+                System.Console.WriteLine($"[ERROR] General Exception: {ex.Message}");
                 _logger.LogError(ex, "Error fetching weather for {City}", city);
                 _logService.AddLog("Weather API", "Error", $"Exception for {city}: {ex.Message}");
                 return null;

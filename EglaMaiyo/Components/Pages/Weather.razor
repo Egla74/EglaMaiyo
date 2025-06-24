@@ -1,4 +1,5 @@
 ﻿@page "/weather"
+@rendermode InteractiveServer
 @inject WeatherService WeatherService
 
 <h3 class="text-primary mb-4">Weather Information</h3>
@@ -35,7 +36,8 @@
 
     private async Task GetWeather()
     {
-        Console.WriteLine($"Button clicked. City entered: {city}");
+        System.Console.WriteLine($"Button clicked. City entered: {city}");
+        
 
         try
         {
@@ -52,6 +54,7 @@
                 showError = false;
             }
         }
+    
         catch (Exception ex)
         {
             Console.WriteLine($"Exception: {ex.Message}");
